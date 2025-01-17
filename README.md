@@ -2,4 +2,4 @@
 
 This repository hosts the webpage for COMP 5500/4600, Spring 2024
 
-https://text-machine-lab.github.io/dl4nlp-s2024
+https://text-machine-lab.github.io/dl4nlp-s2025
