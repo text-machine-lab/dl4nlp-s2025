@@ -1,0 +1,101 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+    <title>COMP 5500/4600: Deep Learning for NLP -- Spring 2025 @ UMass Lowell</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+
+
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/skeleton.css">
+    <link rel="stylesheet" href="css/main.css">
+
+
+</head>
+<body>
+
+    <div class="container">
+        <header class="row">
+            <h4>COMP 5500/4600: Deep Learning for NLP -- Spring 2025<br/><br/>
+            <img src="images/logo.png" width="300" height="200">
+            </h4>
+
+        </header>
+
+
+            <div class="ten columns">
+
+                <h4>How to connect to UML GPUs?</h4>
+                <p>
+                    Preferred way is you connect to this server with VSCode IDE. Connecting throuh VSCode makes it easy to work on the python files (especially the notebooks) hosted on a server.
+                    - Download VSCode: https://code.visualstudio.com/download
+                    - On your local machine (your personal computer or laptop) create a `.ssh` folder in your home directory, if its not there.
+                    - Go to `/.ssh` from the terminal, type `nano config`, and paste the following snippet in the file,
+
+                    ```
+                    Host cs-gpu1
+                        HostName 10.77.3.20
+                        User <Your-CS-Username>
+                    ```
+
+                    - Open VSCode, go to the vertical panel on the left most part of the window, and select `Remote Explorer` icon (the icone has a screen and triangular brackets in the symbol). You must be able to see `cs-gpu1` in the dropdown list of SSH remotes.
+                    - Connect to the `cs-gpu1` and open a new terminal (check the the top-most panel on the window, go to the `Terminal` option and select `New Terminal`).
+                    - ***Very Important*** - Once you open the terminal, go to `cd /home/public`. If you do not see a folder with your `cs-username` create one with `mkdir <Your-CS-Username>`. It is important that you name the folder with your exact cs-username and make sure that it is located at `/home/public`.
+                        - This is important because, the GPUs are located at `/home/grad/doc/2025/<Your-CS-Username>` and your home directory will also be very likely `/home/grad/doc/2025/<Your-CS-Username>`. However, at `/home/grad/doc/2025/<Your-CS-Username>` there is not much storage space, so, if you save your file in `/home/grad/doc/2025/<Your-CS-Username>` you will crash the server for everyone. So, make sure you save your files in `/home/public/<Your-CS-Username>`.
+                </p>
+
+
+                <h4>How to setup miniconda on the server?</h4>
+                <p>
+
+                    If you are working on `cs-gpu1`, please follow these guidelines:
+                    *Create your own directory at `/home/public/` to store miniconda and your trained models*
+                    - Create your user directory mkdir `/home/public/$(your_cs_username)`
+                    - Go to your directory `cd /home/public/$(your_cs_username)`
+                    - Create a file as follows: `nano install_miniconda.sh` and paste the following lines in it,
+
+                    ```
+                    mkdir -p ./miniconda3
+                    wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ./miniconda3/miniconda.sh
+                    bash ./miniconda3/miniconda.sh -b -u -p ./miniconda3
+                    rm -rf ~/miniconda3/miniconda.sh
+                    ./miniconda3/bin/conda init bash
+                    ./miniconda3/bin/conda init zsh
+                    ```
+
+                    - Then run `chmod +x ./install_miniconda.sh`
+                    - Then run `./install_miniconda.sh`
+
+                    *Sourcing conda*
+                    - Create a `source_conda.sh` file in your `/home/public/your_cs_name/` directory (i.e. `/home/public/your_cs_name/source_conda.sh`)
+                    - Content of your source_conda.sh file should look like follows,
+                    ```
+                    source /home/public/your_cs_name/miniconda3/etc/profile.d/conda.sh
+                    conda activate base
+                    ```
+
+                    *Edit your bashrc*
+                    - Then open your bashrc file (located at: `/usr/cs/grad/doc/your_cs_name/.bashrc`) and following lines
+                    ```
+                    # source conda
+                    source /home/public/your_cs_name/source_conda.sh
+
+                    # changing cache folders
+                    export WANDB_CACHE_DIR='/home/public/your_cs_name/.cache/wandb'
+                    export HF_HOME='/home/public/your_cs_name/.cache/huggingface'
+                    export HUGGINGFACE_HUB_CACHE="$HF_HOME/hub"
+                    ```
+
+                    *Double check your that everything is all set*
+                    - disconnect and connect again
+                    - Run `source ~/.bashrc`
+                    - Run `which conda` command and make sure it shows the path as `/home/public/your_cs_name/miniconda3/bin/conda`
+                </p>
